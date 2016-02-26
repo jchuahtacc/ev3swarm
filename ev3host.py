@@ -9,18 +9,18 @@ class Bot:
     def __init__(self, channel, host):
         self.__channel = channel
         self.__start_time = time.time()
- #       self.ev3 = ev3
+        self.host = host
 
     def log(self, obj):
-        print "logging object: " + str(obj)
-        self.__channel.basic_publish(exchange='', routing_key='logs',body=marshal.dumps(obj))
-
-
+        message = dict()
+        message["host"] = self.host
+        message["time"] = time.time() - self.__start_time
+        message["obj"] = obj
+        self.__channel.basic_publish(exchange='', routing_key='logs',body=marshal.dumps(message))
 
 def dummy(bot):
     print "dummy code"
     pass
-
 
 class Rabbit:
     host = None

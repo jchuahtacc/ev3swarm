@@ -1,18 +1,39 @@
-import ev3swarm
+from ev3swarm import Swarm
 import time
+from multiprocessing import Process
 
 def mytask(bot):
+    import time
+    import random
     print "hello from the outside"
-    for n in range(0, 10):
-        bot.log("log " + str(n))
+    for n in range(0, 100):
+        bot.log(random.random() * n)
+        time.sleep(1)
+
+def queueLogger():
+    global s
+    for n in range(0, 300):
+        while not s.queue.empty():
+            print str(s.queue.get())
+        time.sleep(0.5)
+
+
+print "Initializing swarm connection to broker"
+s = Swarm('localhost')
+
+print "Starting logger"
+p = Process(target=queueLogger)
+p.start()
 
 print "Connecting to swarm"
-ev3swarm.connect(['localhost'], 'localhost')
+s.connect(['localhost'])
 
 print "Waiting for swarm acknowledgement"
 time.sleep(2)
 
-print "Init"
-ev3swarm.init()
-ev3swarm.load_task(mytask)
-ev3swarm.go()
+print "Sending task to swarm"
+s.load_task(mytask)
+
+print "Starting swarm"
+s.go()
+
