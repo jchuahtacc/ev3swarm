@@ -19,7 +19,7 @@ def queueLogger():
 
 
 print "Initializing swarm connection to broker"
-s = Swarm('localhost')
+s = Swarm('localhost', 'robot', 'maker')
 
 print "Starting logger"
 p = Process(target=queueLogger)

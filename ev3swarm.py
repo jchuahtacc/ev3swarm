@@ -12,20 +12,25 @@ class Swarm:
     queue = Queue()
     __connectionProcess = None
     __broker = None
+    __credentials = None
 
-    def __init__(self, broker):
+    def __init__(self, broker, username, password):
         self.__broker = broker
-        self.__connection = pika.BlockingConnection(pika.ConnectionParameters(broker))
+        __credentials = pika.PlainCredentials(username, password)
+        self.__connection = self.__pikaConnect()
         self.__channel = self.__connection.channel()
         # Make task exchange
         self.__channel.exchange_declare(exchange='tasks', type='fanout')
+
+    def __pikaConnect(self):
+        return pika.BlockingConnection(pika.ConnectionParameters(host=self.__broker, credentials=self.__credentials))
 
 
     def __alive_callback(self, ch, method, properties, body):
         print "Ev3 Host connection on " + body
 
     def __connect_handler(self, hostnames):
-        connection = pika.BlockingConnection(pika.ConnectionParameters(self.__broker))
+        connection = self.__pikaConnect()
         channel = connection.channel()
         channel.queue_declare(queue='alive')
         channel.basic_consume(self.__alive_callback, queue='alive', no_ack=True)
@@ -58,7 +63,7 @@ class Swarm:
     def __go_handler(self):
         print "Starting connection"
         # Each process needs its own pika Connection
-        connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+        connection = self.__pikaConnect()
         channel = connection.channel()
         channel.queue_declare(queue='logs')
         channel.basic_consume(self.__log_callback, queue='logs', no_ack=True)
