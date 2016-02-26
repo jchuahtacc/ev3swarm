@@ -8,14 +8,14 @@ def mytask(bot):
     print "hello from the outside"
     for n in range(0, 100):
         bot.log(random.random() * n)
-        time.sleep(1)
+        time.sleep(0.25)
 
 def queueLogger():
     global s
-    for n in range(0, 300):
+    for n in range(0, 100):
         while not s.queue.empty():
             print str(s.queue.get())
-        time.sleep(0.5)
+        time.sleep(1)
 
 
 print "Initializing swarm connection to broker"

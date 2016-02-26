@@ -3,9 +3,9 @@ import marshal
 from multiprocessing import Process, Queue
 import warnings
 import rpyc
+from matplotlib import pyplot
 
 class Swarm:
-
     __channel = None
     __process = None
     __connection = None
@@ -68,3 +68,6 @@ class Swarm:
         self.__process = Process(target=self.__go_handler)
         self.__process.start()
         self.__send_control("run")
+
+class Plot:
+    pass
