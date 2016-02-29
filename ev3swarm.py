@@ -16,14 +16,15 @@ class Swarm:
 
     def __init__(self, broker, username, password):
         self.__broker = broker
-        __credentials = pika.PlainCredentials(username, password)
+        self.__credentials = pika.PlainCredentials(username, password)
         self.__connection = self.__pikaConnect()
+        print "finished connection"
         self.__channel = self.__connection.channel()
         # Make task exchange
         self.__channel.exchange_declare(exchange='tasks', type='fanout')
 
     def __pikaConnect(self):
-        return pika.BlockingConnection(pika.ConnectionParameters(host=self.__broker, credentials=self.__credentials))
+        return pika.BlockingConnection(pika.ConnectionParameters(host=self.__broker, port=5672, virtual_host='/', credentials=self.__credentials))
 
 
     def __alive_callback(self, ch, method, properties, body):
@@ -73,6 +74,3 @@ class Swarm:
         self.__process = Process(target=self.__go_handler)
         self.__process.start()
         self.__send_control("run")
-
-class Plot:
-    pass

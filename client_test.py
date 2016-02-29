@@ -4,11 +4,10 @@ from multiprocessing import Process
 
 def mytask(bot):
     import time
-    import random
-    print "hello from the outside"
-    for n in range(0, 100):
-        bot.log(random.random() * n)
-        time.sleep(0.25)
+    import ev3dev.ev3 as ev3
+    m = LargeMotor('outA')
+    m.run_timed(time_sp=3000, duty_cycle_sp=75)
+    time.sleep(3000)
 
 def queueLogger():
     global s
@@ -19,14 +18,14 @@ def queueLogger():
 
 
 print "Initializing swarm connection to broker"
-s = Swarm('localhost', 'robot', 'maker')
+s = Swarm('192.168.43.106', 'robot', 'maker')
 
 print "Starting logger"
 p = Process(target=queueLogger)
 p.start()
 
 print "Connecting to swarm"
-s.connect(['localhost'])
+s.connect(['192.168.43.68'])
 
 print "Waiting for swarm acknowledgement"
 time.sleep(2)
@@ -36,4 +35,3 @@ s.load_task(mytask)
 
 print "Starting swarm"
 s.go()
-

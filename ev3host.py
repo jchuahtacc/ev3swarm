@@ -25,12 +25,15 @@ def dummy(bot):
 class Rabbit:
     host = None
     broker = None
-    def __init__(self, host, broker):
+    def __init__(self, host, broker, username, password):
         self.host = host
         self.broker = broker
+        self.username = username
+        self.password = password
     def work(self):
         print "Starting rabbit connection to broker " + self.broker
-        self.connection = pika.BlockingConnection(pika.ConnectionParameters(host=self.broker))
+        self.connection = pika.BlockingConnection(pika.ConnectionParameters(host=self.broker,
+                        credentials=pika.PlainCredentials(username=self.username, password=self.password)))
         self.channel = self.connection.channel()
         self.channel.queue_declare(queue='logs')
         self.make_exchange('tasks', self.channel, self.task_callback)
@@ -57,17 +60,16 @@ class Rabbit:
         channel.basic_consume(callback, queue=queue_name, no_ack=True)
 
 
-
 class Ev3HostService(rpyc.Service):
     __channel = None
     __rabbits = list()
     __processes = list()
     __host = None
 
-    def exposed_start(self, host, broker):
+    def exposed_start(self, host, broker, username='robot', password='maker'):
         print "Rabbit start request on " + host + " for broker " + broker
         self.__host = host
-        r = Rabbit(host, broker)
+        r = Rabbit(host, broker, username, password)
         self.__rabbits.append(r)
         p = Process(target=r.work)
         self.__processes.append(p)
