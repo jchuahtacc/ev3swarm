@@ -3,9 +3,12 @@
 import pika
 import marshal
 from multiprocessing import Process
+from multiprocessing import Pool
 import time
 #import ev3dev.ev3 as ev3
 import rpyc
+import os
+import signal
 
 class Bot:
     def __init__(self, channel, host):
@@ -52,31 +55,32 @@ class Rabbit:
         if body == "run":
             print "Control message: Run"
             bot = Bot(self.channel, self.host)
-            self.__process = Process(target=dummy, args=(bot,))
-            self.__process.start()
-            self.__process.join()
+            dummy(bot)
     def make_exchange(self, name, channel, callback):
         channel.exchange_declare(exchange=name, type ='fanout')
         result = channel.queue_declare(exclusive=True)
         queue_name = result.method.queue
         channel.queue_bind(exchange=name, queue=queue_name)
         channel.basic_consume(callback, queue=queue_name, no_ack=True)
-
+    def close(self):
+        self.connection.close()
 
 class Ev3HostService(rpyc.Service):
-    __channel = None
-    __rabbits = list()
-    __processes = list()
-    __host = None
+    __rabbit = None
+    __lastPid = None
 
     def exposed_start(self, host, broker, username='robot', password='maker'):
+        if not self.__lastPid is None:
+            if not self.__rabbit is None:
+                self.__rabbit.close()
+            print "Killing last PID: " + str(self.__lastPid)
+            os.kill(self.__lastPid, signal.SIGKILL)
         print "Rabbit start request on " + host + " for broker " + broker
-        self.__host = host
-        r = Rabbit(host, broker, username, password)
-        self.__rabbits.append(r)
-        p = Process(target=r.work)
-        self.__processes.append(p)
-        p.start()
+        self.__lastPid = os.getpid()
+        print "New PID: " + str(self.__lastPid)
+        self.__rabbit = Rabbit(host, broker, username, password)
+        self.__rabbit.work()
+
 
 if __name__ == "__main__":
     from rpyc.utils.server import ForkingServer

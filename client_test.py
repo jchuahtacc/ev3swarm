@@ -5,6 +5,8 @@ from multiprocessing import Process
 def mytask(bot):
     import time
     import ev3dev.ev3 as ev3
+    import os
+    print "task process: " + str(os.getpid())
     m = ev3.LargeMotor('outA')
     m.run_timed(time_sp=3000, duty_cycle_sp=75)
     time.sleep(3000)
