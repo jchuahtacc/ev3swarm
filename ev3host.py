@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 import pika
 import marshal
 from multiprocessing import Process
@@ -52,6 +54,7 @@ class Rabbit:
             bot = Bot(self.channel, self.host)
             self.__process = Process(target=dummy, args=(bot,))
             self.__process.start()
+            self.__process.join()
     def make_exchange(self, name, channel, callback):
         channel.exchange_declare(exchange=name, type ='fanout')
         result = channel.queue_declare(exclusive=True)
