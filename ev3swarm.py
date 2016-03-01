@@ -35,7 +35,9 @@ class Swarm:
         channel = connection.channel()
         channel.queue_declare(queue='alive')
         channel.basic_consume(self.__alive_callback, queue='alive', no_ack=True)
+        print "hostnames " + str(hostnames)
         for h in hostnames:
+            print "Connecting to host " + h
             c = rpyc.connect(host=h, port=12345)
             c.root.start(h, self.__broker)
         channel.start_consuming()

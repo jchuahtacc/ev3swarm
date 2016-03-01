@@ -67,20 +67,17 @@ class Rabbit:
 
 class Ev3HostService(rpyc.Service):
     __rabbit = None
-    __lastPid = None
+    __process = None
 
     def exposed_start(self, host, broker, username='robot', password='maker'):
-        if not self.__lastPid is None:
-            if not self.__rabbit is None:
-                self.__rabbit.close()
-            print "Killing last PID: " + str(self.__lastPid)
-            os.kill(self.__lastPid, signal.SIGKILL)
+        if not self.__rabbit is None:
+            self.__rabbit.close()
         print "Rabbit start request on " + host + " for broker " + broker
-        self.__lastPid = os.getpid()
-        print "New PID: " + str(self.__lastPid)
+        if not self.__process is None:
+            self.__process.terminate()
         self.__rabbit = Rabbit(host, broker, username, password)
-        self.__rabbit.work()
-
+        self.__process = Process(target=self.__rabbit.work)
+        self.__process.start()
 
 if __name__ == "__main__":
     from rpyc.utils.server import ForkingServer
