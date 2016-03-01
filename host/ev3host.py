@@ -1,14 +1,20 @@
 #!/usr/bin/python
 
+"""
+
+ev3host.py
+author: jchuah@tacc.utexas.edu
+
+When run as a service on an ev3dev distribution, it accepts connections from ev3swarm. It will
+locally execute code remotely distributed through AMQP
+
+"""
+
 import pika
 import marshal
 from multiprocessing import Process
-from multiprocessing import Pool
 import time
-#import ev3dev.ev3 as ev3
 import rpyc
-import os
-import signal
 
 class Bot:
     def __init__(self, channel, host):
