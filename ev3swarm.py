@@ -14,7 +14,7 @@ class Swarm:
     __broker = None
     __credentials = None
 
-    def __init__(self, broker, username, password):
+    def __init__(self, broker, username='robot', password='maker'):
         self.__broker = broker
         self.__credentials = pika.PlainCredentials(username, password)
         self.__connection = self.__pikaConnect()
