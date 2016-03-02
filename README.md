@@ -55,4 +55,4 @@ This is a whole separate section. Go to the [ev3host](./ev3host) directory and c
 
 1. Run the setup script with `python setup.py`. 
 2. You should now be able to use it with `from ev3swarm import Swarm`. 
-3. Try the examples.
+3. Try the [examples](./examples).
