@@ -21,4 +21,13 @@ ev3dev logo. It will take a long time for its first boot.
 3. Navigate to the ev3host directory you just copied over: `cd ev3host`
 4. Make `setup.sh` executable: `chmod +x setup.sh`
 5. Run it as root: `sudo ./setup.sh` (and enter the password `maker` when prompted)
-6. The install script will download any necessary files and configure the ev3host service
+6. The install script will download any necessary files and configure the ev3host service. It will take a while, but when it's finished you should see a message saying `ev3host should be up and running now!`
+7. I suggest cloning the SD card rather than repeating the process for other hosts.
+
+### Running ev3host from the command line
+
+ev3host should be running as a service on the ev3 every time it boots, so this shouldn't be absolutely necessary. However, any syntax errors in code that you might have or any exceptions that are caused will not necessarily pipe their output back to the ev3swarm. Therefore, you may wish to manually run ev3host while logged in to your host through ssh.
+
+1. SSH in to your ev3
+2. Stop the ev3host service: `sudo /etc/init.d/ev3host stop`
+3. Run ev3host: `/usr/local/bin/ev3host`
