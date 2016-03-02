@@ -30,7 +30,7 @@ First things first, download this repo.
 
 ### Setup RabbitMQ
 
-1. Download and install RabbitMQ. For my OSX install, I had to install XCode tools, install brew, then run a brew command to install it. Check for details on their page for your specific platform.
+1. Download and install [RabbitMQ](http://www.rabbitmq.com/). For my OSX install, I had to install XCode tools, install brew, then run a brew command to install it. Check for details on their website for your specific platform.
 2. Make sure it's running.
 2. Open up a browser and navigate to your RabbitMQ server's management page at [http://localhost:15672](http://localhost:15672)
 3. At the bottom of the page, you should see a section called *Paths*, with one that says *Config File.* Don't worry if it's not found, just open up that folder.
