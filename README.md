@@ -22,7 +22,7 @@ Each EV3 unit has to run a Python service called `ev3host`. `ev3host` will wait 
 
 ### Is it difficult to use?
 
-Hopefully not! If you can think of ways that this can be easier, please let me know. The intended audience is Middle and High School students. You may have to get your hands a little dirty with configuration, but these instructions should be pretty complete. If you can program a VCR, then you can do this.
+Hopefully not! If you can think of ways that this can be easier, please let me know. The intended audience is Middle and High School students. You may have to get your hands a little dirty with configuration, but these instructions should be pretty complete. If you know how to find your IP address, then you should be in good shape.
 
 ## Setup
 
